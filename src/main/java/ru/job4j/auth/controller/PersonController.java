@@ -24,7 +24,7 @@ public class PersonController {
     public ResponseEntity<Person> findById(@PathVariable int id) {
         return simplePersonService.findById(id)
                 .map(ResponseEntity::ok)
-                .orElseGet(()-> ResponseEntity.notFound().build());
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/")
