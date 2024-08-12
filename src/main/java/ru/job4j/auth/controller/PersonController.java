@@ -28,29 +28,31 @@ public class PersonController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Person> create(@RequestBody Person person) throws SQLException {
+    public ResponseEntity<Person> create(@RequestBody Person person) {
         return simplePersonService.save(person)
                 .map(ResponseEntity::ok)
-                .orElseThrow(() -> new SQLException("An error occurred while saving data"));
+                .orElseGet(() -> ResponseEntity.status(409).build());
     }
 
     @PutMapping("/")
-    public ResponseEntity<Void> update(@RequestBody Person person) throws SQLException {
+    public ResponseEntity<Void> update(@RequestBody Person person) {
+        ResponseEntity<Void> status = ResponseEntity.notFound().build();
         var isUpdated = simplePersonService.update(person);
-        if (!isUpdated) {
-            throw new SQLException(String.format("An error occurred while updating person with id=%s", person.getId()));
+        if (isUpdated) {
+            status = ResponseEntity.ok().build();
         }
-        return ResponseEntity.ok().build();
+        return status;
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable int id) throws SQLException {
+    public ResponseEntity<Void> delete(@PathVariable int id) {
+        ResponseEntity<Void> status = ResponseEntity.notFound().build();
         Person person = new Person();
         person.setId(id);
         var isDeleted = simplePersonService.delete(person);
-        if (!isDeleted) {
-            throw new SQLException(String.format("An error occurred while deleting person with id=%s", id));
+        if (isDeleted) {
+            status = ResponseEntity.ok().build();
         }
-        return ResponseEntity.ok().build();
+        return status;
     }
 }
