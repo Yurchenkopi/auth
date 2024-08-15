@@ -2,6 +2,7 @@ package ru.job4j.auth.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.auth.model.Person;
 import ru.job4j.auth.service.PersonService;
@@ -13,6 +14,8 @@ import java.util.List;
 @RequestMapping("/person")
 public class PersonController {
     private final PersonService simplePersonService;
+
+    private PasswordEncoder encoder;
 
     @GetMapping("/")
     public List<Person> findAll() {
@@ -54,4 +57,13 @@ public class PersonController {
         }
         return status;
     }
+
+    @PostMapping("/sign-up")
+    public ResponseEntity<Person> signUp(@RequestBody Person person) {
+        person.setPassword(encoder.encode(person.getPassword()));
+        return simplePersonService.save(person)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(409).build());
+    }
+
 }
