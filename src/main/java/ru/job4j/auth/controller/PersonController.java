@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.job4j.auth.model.Person;
 import ru.job4j.auth.service.PersonService;
 
-import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -37,7 +36,7 @@ public class PersonController {
     @PutMapping("/")
     public ResponseEntity<Void> update(@RequestBody Person person) {
         ResponseEntity<Void> status = ResponseEntity.notFound().build();
-        var isUpdated = simplePersonService.update(person);
+        boolean isUpdated = simplePersonService.update(person);
         if (isUpdated) {
             status = ResponseEntity.ok().build();
         }
@@ -49,7 +48,7 @@ public class PersonController {
         ResponseEntity<Void> status = ResponseEntity.notFound().build();
         Person person = new Person();
         person.setId(id);
-        var isDeleted = simplePersonService.delete(person);
+        boolean isDeleted = simplePersonService.delete(person);
         if (isDeleted) {
             status = ResponseEntity.ok().build();
         }

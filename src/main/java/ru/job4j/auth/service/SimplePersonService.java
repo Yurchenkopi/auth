@@ -55,7 +55,7 @@ public class SimplePersonService implements PersonService {
     @Override
     public boolean update(Person person) {
         boolean rsl = false;
-        var currentPerson = personRepository.findById(person.getId());
+        Optional<Person> currentPerson = personRepository.findById(person.getId());
         if (currentPerson.isPresent()) {
             if (!currentPerson.get().equals(person)) {
                 try {
@@ -71,8 +71,8 @@ public class SimplePersonService implements PersonService {
 
     @Override
     public boolean delete(Person person) {
-        var rsl = false;
-        var currentPerson = personRepository.findById(person.getId());
+        boolean rsl = false;
+        Optional<Person> currentPerson = personRepository.findById(person.getId());
         if (currentPerson.isPresent()) {
             try {
                 personRepository.delete(person);
