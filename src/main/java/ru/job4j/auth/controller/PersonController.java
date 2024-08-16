@@ -61,9 +61,7 @@ public class PersonController {
     @PostMapping("/sign-up")
     public ResponseEntity<Person> signUp(@RequestBody Person person) {
         person.setPassword(encoder.encode(person.getPassword()));
-        return simplePersonService.save(person)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.status(409).build());
+        return create(person);
     }
 
 }
