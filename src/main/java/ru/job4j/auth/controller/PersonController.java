@@ -29,8 +29,9 @@ public class PersonController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/")
+    @PostMapping({"/", "/sign-up"})
     public ResponseEntity<Person> create(@RequestBody Person person) {
+        person.setPassword(encoder.encode(person.getPassword()));
         return simplePersonService.save(person)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(409).build());
@@ -56,12 +57,6 @@ public class PersonController {
             status = ResponseEntity.ok().build();
         }
         return status;
-    }
-
-    @PostMapping("/sign-up")
-    public ResponseEntity<Person> signUp(@RequestBody Person person) {
-        person.setPassword(encoder.encode(person.getPassword()));
-        return create(person);
     }
 
 }
