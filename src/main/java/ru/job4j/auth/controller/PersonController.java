@@ -1,9 +1,11 @@
 package ru.job4j.auth.controller;
 
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import ru.job4j.auth.model.Person;
 import ru.job4j.auth.service.PersonService;
 
@@ -26,7 +28,9 @@ public class PersonController {
     public ResponseEntity<Person> findById(@PathVariable int id) {
         return simplePersonService.findById(id)
                 .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "User is not found. Please, check id."
+                ));
     }
 
     @PostMapping({"/", "/sign-up"})
