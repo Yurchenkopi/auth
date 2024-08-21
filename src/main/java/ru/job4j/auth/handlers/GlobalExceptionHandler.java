@@ -22,11 +22,22 @@ public class GlobalExceptionHandler {
     private final ObjectMapper objectMapper;
 
     @ExceptionHandler(value = {NullPointerException.class})
-    public void handleException(Exception e, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void handleNullPointerException(Exception e, HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setStatus(HttpStatus.BAD_REQUEST.value());
         response.setContentType("application/json");
         response.getWriter().write(objectMapper.writeValueAsString(new HashMap<>() { {
             put("message", "Some of fields empty");
+            put("details", e.getMessage());
+        }}));
+        LOGGER.error(e.getMessage());
+    }
+
+    @ExceptionHandler(value = {IllegalArgumentException.class})
+    public void handleIllegalArgumentException(Exception e, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setStatus(HttpStatus.BAD_REQUEST.value());
+        response.setContentType("application/json");
+        response.getWriter().write(objectMapper.writeValueAsString(new HashMap<>() { {
+            put("message", "Some of arguments have incorrect values");
             put("details", e.getMessage());
         }}));
         LOGGER.error(e.getMessage());
