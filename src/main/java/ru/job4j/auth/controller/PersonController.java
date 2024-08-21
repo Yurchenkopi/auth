@@ -112,5 +112,4 @@ public class PersonController {
         Pattern pattern = Pattern.compile(regex);
         return pattern.matcher(password).find();
     }
-
 }
