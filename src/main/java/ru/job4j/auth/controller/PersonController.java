@@ -15,9 +15,8 @@ import ru.job4j.auth.service.PersonService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -52,7 +51,7 @@ public class PersonController {
     }
 
     @PostMapping({"/", "/sign-up"})
-    public ResponseEntity<Person> create(@RequestBody Person person) {
+    public ResponseEntity<Person> create(@Valid @RequestBody Person person) {
         if (person.getLogin() == null || person.getPassword() == null) {
             throw new NullPointerException("Username and password mustn't be empty");
         }
@@ -66,7 +65,7 @@ public class PersonController {
     }
 
     @PutMapping("/")
-    public ResponseEntity<Void> update(@RequestBody Person person) {
+    public ResponseEntity<Void> update(@Valid @RequestBody Person person) {
         if (person.getId() == 0) {
             throw new IllegalArgumentException("User id must not be equal to zero.");
         }
@@ -117,7 +116,7 @@ public class PersonController {
     }
 
     @PatchMapping("/")
-    public Person updatePartially(@RequestBody PersonDto personDto) {
+    public Person updatePartially(@Valid @RequestBody PersonDto personDto) {
         var currentOptional = simplePersonService.findById(personDto.getId());
         if (currentOptional.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
